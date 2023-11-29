@@ -13,6 +13,7 @@ router.post(
     body('userId').isMongoId(),
     body('busId').isMongoId(),
     body('seatNumber').isInt({ min: 1 }),
+    body('journeyDate').isISO8601()
   ],
   validate,
   authenticateUser,

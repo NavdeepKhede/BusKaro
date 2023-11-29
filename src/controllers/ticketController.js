@@ -5,7 +5,7 @@ const { checkAdminRole } = require('../middlewares/authMiddleware');
 const bookTicket = async (req, res, next) => {
   try {
     // TODO: get date of journey and use it
-    const { userId, busId, seatNumber } = req.body;
+    const { userId, busId, seatNumber, journeyDate } = req.body;
 
     // Check if the user has admin role
     if (req.user.role === 'admin') {
@@ -27,6 +27,7 @@ const bookTicket = async (req, res, next) => {
       user: userId,
       bus: busId,
       seatNumber,
+      journeyDate
     });
 
     await newTicket.save();
@@ -56,7 +57,7 @@ const cancelTicket = async (req, res, next) => {
     }
 
     // Cancel the ticket
-    await Ticket.findByIdAndDelete(ticketId);
+    await Ticket.findByIdAndUpdate(ticketId,{ $set: {status:'canceled'}});
 
     // Update bus to free up the seat
     await Bus.findByIdAndUpdate(ticket.bus, { $pull: { occupiedSeats: ticket.seatNumber } });
