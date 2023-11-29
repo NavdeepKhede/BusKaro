@@ -17,7 +17,7 @@ const register = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Set default role as 'user'
-    const newUser = new User({email, number, username, password: hashedPassword, role: 'admin' });
+    const newUser = new User({email, number, username, password: hashedPassword, role: 'user' });
     await newUser.save();
 
     return res.status(201).json({ message: 'User registered successfully' });
