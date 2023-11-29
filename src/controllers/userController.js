@@ -17,7 +17,7 @@ const register = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Set default role as 'user'
-    const newUser = new User({ username, password: hashedPassword, role: 'user' });
+    const newUser = new User({ username, password: hashedPassword, role: 'admin' });
     await newUser.save();
 
     return res.status(201).json({ message: 'User registered successfully' });
@@ -43,7 +43,7 @@ const login = async (req, res, next) => {
     }
 
     // Generate a JWT token
-    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, 'your-secret-key', {
+    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.SECRET_KEY || 'your-secret-key', {
       expiresIn: '1h',
     });
 

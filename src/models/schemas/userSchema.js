@@ -9,20 +9,20 @@ const userSchema = new mongoose.Schema({
 });
 
 // Hash the password before saving
-userSchema.pre('save', async function (next) {
-  try {
-    const user = this;
+// userSchema.pre('save', async function (next) {
+//   try {
+//     const user = this;
 
-    if (user.isModified('password')) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(user.password, salt);
-    }
+//     if (user.isModified('password')) {
+//       const salt = await bcrypt.genSalt(10);
+//       user.password = await bcrypt.hash(user.password, salt);
+//     }
 
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 const User = mongoose.model("User", userSchema);
 
