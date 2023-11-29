@@ -28,22 +28,22 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // Check if the user exists
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     // Check if the password is correct
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     // Generate a JWT token
-    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.SECRET_KEY || 'your-secret-key', {
+    const token = jwt.sign({ userId: user._id, email: user.email, role: user.role }, process.env.SECRET_KEY || 'your-secret-key', {
       expiresIn: '1h',
     });
 

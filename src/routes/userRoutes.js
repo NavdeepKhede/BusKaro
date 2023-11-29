@@ -22,7 +22,7 @@ router.post(
 // User Login
 router.post(
   "/login",
-  [body("username").notEmpty().isAlphanumeric(), body("password").notEmpty()],
+  [body("email").notEmpty().isEmail(), body("password").notEmpty()],
   validate,
   UserController.login
 );

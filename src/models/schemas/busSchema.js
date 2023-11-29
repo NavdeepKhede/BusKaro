@@ -6,7 +6,7 @@ const busSchema = new mongoose.Schema({
   availableDays: { type: [String], required: true },
   arrival: { type: String, required: true },
   departure: { type: String, required: true },
-  occupiedSeats: { type: [Number], default: [] },
+  occupiedSeats: { type: [String,Number], default: [] },
   routes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Route' }],
 });
 
