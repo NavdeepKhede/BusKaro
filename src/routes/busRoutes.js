@@ -1,5 +1,5 @@
 const express = require('express');
-const { body, param } = require('express-validator');
+const { body, param, query } = require('express-validator');
 const BusController = require('../controllers/busController');
 const { authenticateUser, checkAdminRole } = require('../middlewares/authMiddleware'); // To be removed
 const { validate } = require('../middlewares/validationMiddleware');
@@ -59,5 +59,8 @@ router.delete(
   checkAdminRole,
   BusController.deleteBus
 );
+
+router.get('/search',
+[query('source').notEmpty(), query('destination').notEmpty(), query('date').isISO8601()], BusController.searchBuses);
 
 module.exports = router;

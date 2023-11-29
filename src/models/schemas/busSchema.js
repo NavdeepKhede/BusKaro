@@ -6,10 +6,13 @@ const busSchema = new mongoose.Schema({
   availableDays: { type: [String], required: true },
   arrival: { type: String, required: true },
   departure: { type: String, required: true },
-  occupiedSeats: { type: [String,Number], default: [] },
+  occupiedSeats: {
+    type: Map,
+    of: [Number], default: {}
+  },
   routes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Route' }],
 });
 
 const Bus = mongoose.model('Bus', busSchema);
 
-module.exports = Bus;
+module.exports = Bus; 

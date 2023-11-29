@@ -1,6 +1,5 @@
 const Route = require('../models/schemas/routeSchema');
 const Bus = require('../models/schemas/busSchema');
-const { checkAdminRole } = require('../middlewares/authMiddleware'); // To be removed
 
 const createRoute = async (req, res, next) => {
   try {

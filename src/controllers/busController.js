@@ -1,4 +1,5 @@
 const Bus = require('../models/schemas/busSchema');
+const Route = require('../models/schemas/routeSchema');
 
 const getAllBuses = async (req, res, next) => {
   try {
@@ -92,6 +93,27 @@ const deleteBus = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllBuses, getBusById, addBus, updateBus, deleteBus };
+const searchBuses = async (req, res, next) => {
+  try {
+    const { source, destination, date } = req.query;
+    const weekday = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    // Get all buses
+    const buses = await Route.find({source,destination}).populate('buses');
+    let availableBuses = [];
+    console.log(buses[0]['buses']);
+    buses[0].buses.forEach(bus => {
+      if(bus.availableDays.includes(weekday)){
+        availableBuses.push(bus);
+      }
+    });
+    return res.status(200).json(availableBuses);
+  } catch (error) {
+    next(error);
+  }
+
+}
+
+
+module.exports = { getAllBuses, getBusById, addBus, updateBus, deleteBus, searchBuses };
 
 // TODO: Check if user if admin or not
