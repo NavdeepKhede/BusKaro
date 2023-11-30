@@ -60,21 +60,6 @@ const bookTicket = async (req, res, next) => {
   }
 };
 
-const getTicketDetails = async (req, res, next) => {
-  try {
-    // Find tickets for the user
-    const tickets = await Ticket.find({ user: userId })
-      .populate({
-        path: "bus",
-        populate: { path: "routes" },
-      })
-      .exec();
-    console.log(tickets);
-    res.status(200).json(tickets);
-  } catch (error) {
-    next(error);
-  }
-};
 
 const cancelTicket = async (req, res, next) => {
   try {
