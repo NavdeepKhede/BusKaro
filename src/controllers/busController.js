@@ -1,5 +1,5 @@
-const Bus = require('../models/schemas/busSchema');
-const Route = require('../models/schemas/routeSchema');
+const Bus = require("../models/schemas/busSchema");
+const Route = require("../models/schemas/routeSchema");
 
 const getAllBuses = async (req, res, next) => {
   try {
@@ -18,7 +18,7 @@ const getBusById = async (req, res, next) => {
     const bus = await Bus.findById(busId);
 
     if (!bus) {
-      return res.status(404).json({ message: 'Bus not found' });
+      return res.status(404).json({ message: "Bus not found" });
     }
 
     return res.status(200).json(bus);
@@ -42,7 +42,9 @@ const addBus = async (req, res, next) => {
 
     await newBus.save();
 
-    return res.status(201).json({ message: 'Bus added successfully', bus: newBus });
+    return res
+      .status(201)
+      .json({ message: "Bus added successfully", bus: newBus });
   } catch (error) {
     next(error);
   }
@@ -67,10 +69,12 @@ const updateBus = async (req, res, next) => {
     );
 
     if (!updatedBus) {
-      return res.status(404).json({ message: 'Bus not found' });
+      return res.status(404).json({ message: "Bus not found" });
     }
 
-    return res.status(200).json({ message: 'Bus updated successfully', bus: updatedBus });
+    return res
+      .status(200)
+      .json({ message: "Bus updated successfully", bus: updatedBus });
   } catch (error) {
     next(error);
   }
@@ -84,10 +88,10 @@ const deleteBus = async (req, res, next) => {
     const deletedBus = await Bus.findByIdAndDelete(busId);
 
     if (!deletedBus) {
-      return res.status(404).json({ message: 'Bus not found' });
+      return res.status(404).json({ message: "Bus not found" });
     }
 
-    return res.status(200).json({ message: 'Bus deleted successfully' });
+    return res.status(200).json({ message: "Bus deleted successfully" });
   } catch (error) {
     next(error);
   }
@@ -96,24 +100,47 @@ const deleteBus = async (req, res, next) => {
 const searchBuses = async (req, res, next) => {
   try {
     const { source, destination, date } = req.query;
-    const weekday = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    const weekday = new Date(date)
+      .toLocaleDateString("en-US", { weekday: "long" })
+      .toLowerCase();
     // Get all buses
-    const buses = await Route.find({source,destination}).populate('buses');
+    const buses = await Route.find({
+      $and: [{ source: source }, { destination: destination }],
+    }).populate("buses");
+
+    console.log(buses);
+    if (buses.length === 0) {
+      return res.status(404).json({ message: "No bus found!" });
+    }
+
     let availableBuses = [];
-    console.log(buses[0]['buses']);
-    buses[0].buses.forEach(bus => {
-      if(bus.availableDays.includes(weekday)){
+    console.log(buses[0]);
+    buses[0].buses.forEach((bus) => {
+      if (bus.availableDays.includes(weekday)) {
         availableBuses.push(bus);
       }
     });
-    return res.status(200).json(availableBuses);
+
+    const fromattedData = {
+      source: buses[0].source,
+      destination: buses[0].destination,
+      eta: buses[0].eta,
+      distance: buses[0].distance,
+      availableBuses
+    }
+    return res.status(200).json(fromattedData);
   } catch (error) {
     next(error);
   }
+};
 
-}
-
-
-module.exports = { getAllBuses, getBusById, addBus, updateBus, deleteBus, searchBuses };
+module.exports = {
+  getAllBuses,
+  getBusById,
+  addBus,
+  updateBus,
+  deleteBus,
+  searchBuses,
+};
 
 // TODO: Check if user if admin or not
