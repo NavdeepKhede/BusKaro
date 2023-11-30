@@ -29,8 +29,8 @@ const getBusById = async (req, res, next) => {
 
 const addBus = async (req, res, next) => {
   try {
-    const { busName, totalSeats, availableDays, arrival, departure } = req.body;
-
+    let { busName, totalSeats, availableDays, arrival, departure } = req.body;
+    availableDays = availableDays.map((day) => day.toLowerCase());
     // Create a new bus
     const newBus = new Bus({
       busName,
@@ -53,8 +53,8 @@ const addBus = async (req, res, next) => {
 const updateBus = async (req, res, next) => {
   try {
     const busId = req.params.id;
-    const { busName, totalSeats, availableDays, arrival, departure } = req.body;
-
+    let { busName, totalSeats, availableDays, arrival, departure } = req.body;
+    availableDays = availableDays.map((day) => day.toLowerCase());
     // Update bus by ID
     const updatedBus = await Bus.findByIdAndUpdate(
       busId,

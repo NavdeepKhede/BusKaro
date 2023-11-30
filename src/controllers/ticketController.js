@@ -1,6 +1,5 @@
 const Ticket = require('../models/schemas/ticketSchema');
 const Bus = require('../models/schemas/busSchema');
-const { checkAdminRole } = require('../middlewares/authMiddleware');
 
 const bookTicket = async (req, res, next) => {
   try {

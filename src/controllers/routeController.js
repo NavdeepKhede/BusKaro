@@ -3,8 +3,9 @@ const Bus = require('../models/schemas/busSchema');
 
 const createRoute = async (req, res, next) => {
   try {
-    const { source, destination, distance, eta, busIds } = req.body;
-
+    let { source, destination, distance, eta, busIds } = req.body;
+    source = source.toLowerCase();
+    destination = destination.toLowerCase();
     // Check if the source and destination are the same
     if (source === destination) {
       return res.status(400).json({ message: 'Source and destination cannot be the same' });
